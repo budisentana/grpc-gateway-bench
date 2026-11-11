@@ -1,0 +1,92 @@
+{
+  "host": {
+    "arch": "amd64",
+    "go": "go1.24.7",
+    "gomaxprocs": 1,
+    "num_cpu": 1
+  },
+  "msg_len": 200,
+  "results": [
+    {
+      "scheme": "ecdsa-p256",
+      "signature_bytes": 71,
+      "public_key_bytes": 65,
+      "keygen": {
+        "n": 300,
+        "median_us": 13.787,
+        "p95_us": 53.467,
+        "mean_us": 21.954566666666665
+      },
+      "sign": {
+        "n": 5000,
+        "median_us": 33.418,
+        "p95_us": 50.624,
+        "mean_us": 36.967086599999995
+      },
+      "verify": {
+        "n": 5000,
+        "median_us": 71.475,
+        "p95_us": 97.734,
+        "mean_us": 78.1546102
+      },
+      "sign_ops_per_s_one_core": 27051.090361013197,
+      "sign_ops_per_s_all_cores": 31071,
+      "verify_ops_per_s_one_core": 12795.150502842635,
+      "parallel_workers": 1
+    },
+    {
+      "scheme": "ed25519",
+      "signature_bytes": 64,
+      "public_key_bytes": 32,
+      "keygen": {
+        "n": 300,
+        "median_us": 16.007,
+        "p95_us": 20.709,
+        "mean_us": 21.061643333333336
+      },
+      "sign": {
+        "n": 5000,
+        "median_us": 20.582,
+        "p95_us": 32.473,
+        "mean_us": 22.9747522
+      },
+      "verify": {
+        "n": 5000,
+        "median_us": 47.209,
+        "p95_us": 72.163,
+        "mean_us": 52.487632999999995
+      },
+      "sign_ops_per_s_one_core": 43526.04072917922,
+      "sign_ops_per_s_all_cores": 52642.666666666664,
+      "verify_ops_per_s_one_core": 19052.10699823328,
+      "parallel_workers": 1
+    },
+    {
+      "scheme": "mldsa65-gopure",
+      "signature_bytes": 3309,
+      "public_key_bytes": 1952,
+      "keygen": {
+        "n": 300,
+        "median_us": 465.765,
+        "p95_us": 576.23,
+        "mean_us": 481.8302033333333
+      },
+      "sign": {
+        "n": 5000,
+        "median_us": 455.302,
+        "p95_us": 1646.843,
+        "mean_us": 617.9159030000001
+      },
+      "verify": {
+        "n": 5000,
+        "median_us": 76.48,
+        "p95_us": 112.025,
+        "mean_us": 79.1301948
+      },
+      "sign_ops_per_s_one_core": 1618.3432003367616,
+      "sign_ops_per_s_all_cores": 1791.6666666666667,
+      "verify_ops_per_s_one_core": 12637.400963405691,
+      "parallel_workers": 1
+    }
+  ]
+}

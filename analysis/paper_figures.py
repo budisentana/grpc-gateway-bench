@@ -129,6 +129,30 @@ def fig_headroom(h, out):
     plt.close(fig)
 
 
+def fig_batch(g, out):
+    fig, axes = plt.subplots(1, 2, figsize=(W, 1.6))
+    for b, mk in [(16, "o"), (64, "s"), (256, "D")]:
+        r = g[g["batch_max"] == b].sort_values("batch_window_ms")
+        if r.empty:
+            continue
+        axes[0].plot(r["batch_window_ms"], r["rps_pct_of_C0"], marker=mk, ms=3, label=f"B = {b}")
+        axes[1].plot(r["batch_window_ms"], r["added_p50_ms_vs_C0"], marker=mk, ms=3, label=f"B = {b}")
+    axes[0].set_ylabel("Throughput (% of C0)")
+    axes[1].set_ylabel("Added p50 latency (ms)")
+    for ax in axes:
+        ax.set_xlabel("Batch window T (ms)")
+        ax.set_xticks([1, 5, 10])
+        ax.grid(lw=0.3, alpha=0.6)
+        for sp in ["top", "right"]:
+            ax.spines[sp].set_visible(False)
+    axes[0].set_ylim(0, 70)
+    axes[1].set_ylim(0, 12)
+    axes[0].legend(frameon=False, loc="lower left", handlelength=1.4)
+    fig.tight_layout(w_pad=1.0)
+    fig.savefig(out, bbox_inches="tight", pad_inches=0.02)
+    plt.close(fig)
+
+
 def main():
     res, out = sys.argv[1], sys.argv[2]
     os.makedirs(out, exist_ok=True)
@@ -138,6 +162,8 @@ def main():
     fig_architecture(os.path.join(out, "fig1_architecture.png"))
     fig_closed(default, os.path.join(out, "fig2_closed.png"))
     fig_open(default, os.path.join(out, "fig3_open.png"))
+    if data.get("batch_grid"):
+        fig_batch(pd.DataFrame(data["batch_grid"]), os.path.join(out, "fig5_batch.png"))
     hp = os.path.join(res, "summary", "headroom.csv")
     if os.path.exists(hp):
         fig_headroom(pd.read_csv(hp), os.path.join(out, "fig4_headroom.png"))

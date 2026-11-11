@@ -67,6 +67,13 @@ gbest = G.sort_values("rps", ascending=False).iloc[0]
 gworst = G.sort_values("rps").iloc[0]
 
 
+RUNS = pd.read_csv(os.path.join(RES, "summary", "runs.csv"))
+_m = RUNS[(RUNS["mode"] == "closed") & (RUNS["payload"] == 128) & (~RUNS["file"].str.contains("C3grid"))
+          & (RUNS["label"] != "headroom")].copy()
+_m["be_cpu_us_per_req"] = _m["be_cpu_pct"] / 100 * 1e6 / _m["rps"]
+BE = _m.groupby(["config", "concurrency"])[["be_verify_p50_us", "be_cpu_us_per_req", "signatures_per_req"]].median()
+
+
 def open_knee(cfg):
     """Highest offered rate served with p99 under 50 ms and under 1% errors."""
     d = S[(S["mode"] == "open") & (S["config"] == cfg)].sort_values("offered_rate")

@@ -1,0 +1,72 @@
+{
+  "library": "OpenSSL 4.0.2 25 Aug 2026",
+  "msg_len": 200,
+  "results": [
+    {
+      "scheme": "ecdsa-p256 (OpenSSL)",
+      "signature_bytes": 71,
+      "keygen": {
+        "n": 500,
+        "median_us": 13.188,
+        "p95_us": 16.983,
+        "mean_us": 15.851209999999998
+      },
+      "sign": {
+        "n": 5000,
+        "median_us": 24.59,
+        "p95_us": 31.061,
+        "mean_us": 25.6861522
+      },
+      "verify": {
+        "n": 5000,
+        "median_us": 79.748,
+        "p95_us": 99.686,
+        "mean_us": 83.6287916
+      }
+    },
+    {
+      "scheme": "ed25519 (OpenSSL)",
+      "signature_bytes": 64,
+      "keygen": {
+        "n": 500,
+        "median_us": 28.057,
+        "p95_us": 40.995,
+        "mean_us": 30.077016
+      },
+      "sign": {
+        "n": 5000,
+        "median_us": 31.486,
+        "p95_us": 40.155,
+        "mean_us": 31.6647886
+      },
+      "verify": {
+        "n": 5000,
+        "median_us": 104.963,
+        "p95_us": 149.778,
+        "mean_us": 114.69601899999999
+      }
+    },
+    {
+      "scheme": "mldsa65 (OpenSSL)",
+      "signature_bytes": 3309,
+      "keygen": {
+        "n": 500,
+        "median_us": 171.362,
+        "p95_us": 195.995,
+        "mean_us": 178.201188
+      },
+      "sign": {
+        "n": 5000,
+        "median_us": 606.624,
+        "p95_us": 1996.597,
+        "mean_us": 794.153861
+      },
+      "verify": {
+        "n": 5000,
+        "median_us": 169.024,
+        "p95_us": 194.702,
+        "mean_us": 174.6958242
+      }
+    }
+  ]
+}
