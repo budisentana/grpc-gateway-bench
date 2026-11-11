@@ -1,6 +1,6 @@
 # grpc-gateway-bench — PQC authentication at a REST-to-gRPC gateway
 
-Experiment code for the paper *PQC Authentication at a REST-to-gRPC Edge Gateway*.
+Experiment code for the paper *Measuring the Cost of Post-Quantum Authentication in a REST-to-gRPC Gateway*.
 It measures what post-quantum authentication costs when a gateway translates
 public REST/JSON calls into internal gRPC calls.
 
@@ -19,7 +19,7 @@ downloads are needed, so it also works on lab machines without internet.
 | Scripts | `scripts/` | `run_one.sh`, `run_matrix.sh`, `netem.sh`, `headroom.sh`, `capture.sh`, `run_pilot.sh` |
 | Analysis | `analysis/` | `summarize.py` (tables, tests, figures), `crosscheck_mldsa.py`, `microbench_openssl.py` |
 
-### Configurations (paper Table 3)
+### Configurations (paper Table 2)
 
 | ID | Internal channel | Message authentication |
 | --- | --- | --- |
@@ -85,27 +85,25 @@ GW_CPUS=0 GW_PROCS=1 BE_CPUS=1 LG_CPUS=1 scripts/run_pilot.sh results/pilot
 Mann–Whitney U with rank-biserial effect sizes), the p99-vs-load and throughput figures, and
 `results.json`.
 
-## Things to state honestly in the paper
+## Known limitations
 
-- **ML-DSA implementation.** The default backend is the pure-Go implementation in
-  `internal/mldsa`. It passes byte-exact key-generation and two-way signature cross-checks against
-  OpenSSL, but it is *not* optimised and *not* constant-time. Compare its Table 6 numbers with
-  `microbench_openssl.json`. For headline numbers, either report this implementation explicitly or
-  build with an optimised library: `go get github.com/cloudflare/circl@latest && go build -tags circl -o bin/ ./cmd/...`
-  (the `circl` adapter in `internal/sig/circl.go` was written against CIRCL's documented API but
-  could not be compiled where this suite was written; check it builds).
-- **C1 is post-quantum key exchange only.** Go's TLS stack does not support ML-DSA certificates,
-  so C1 uses X25519MLKEM768 with ECDSA certificates. Either describe C1 that way in Section III, or
-  add OpenSSL 3.5+ TLS proxies with ML-DSA certificates for a true PQ-authenticated channel.
-- **gRPC framing.** gRPC is implemented on Go's `net/http` HTTP/2 stack following the
-  "gRPC over HTTP2" specification, rather than with the grpc-go library.
-- **Loss** in the `constrained` profile is applied 0.2% in each direction.
-- **Metadata size.** The gateway's `metadata_bytes_*` figures are computed before Go's HTTP/2
-  client adds `user-agent` and `accept-encoding` (about 111 bytes). The backend's
-  `metadata_bytes_*_received` figures are what arrives and what the 8 KB limit is checked against;
-  `summarize.py` uses them when present.
-- **One host vs three.** With a single host, components share memory bandwidth and caches even
-  when pinned to separate cores. Three hosts match the paper's description more closely.
+- **ML-DSA implementation.** The default backend is the pure-Go implementation in `internal/mldsa`. It
+  passes byte-exact key-generation and two-way signature cross-checks against OpenSSL
+  (`analysis/crosscheck_mldsa.py`), but it is not vectorised and not constant-time, so it is suitable for
+  benchmarking only. `microbench_openssl.json` gives reference timings from OpenSSL. An optional adapter for
+  Cloudflare CIRCL is included (`go get github.com/cloudflare/circl@latest && go build -tags circl -o bin/ ./cmd/...`);
+  it is untested, so check that it builds against your CIRCL version.
+- **C1 uses post-quantum key exchange only.** Go's TLS stack does not support ML-DSA certificates, so C1 uses
+  X25519MLKEM768 with ECDSA certificates. A fully post-quantum-authenticated channel needs TLS endpoints
+  with ML-DSA certificate support, such as OpenSSL 3.5 or later.
+- **gRPC framing.** gRPC is implemented on Go's `net/http` HTTP/2 stack following the "gRPC over HTTP2"
+  specification, rather than with the grpc-go library.
+- **Packet loss** in the `constrained` netem profile is applied at 0.2% in each direction.
+- **Metadata size.** The gateway's `metadata_bytes_*` figures are computed before Go's HTTP/2 client adds
+  `user-agent` and `accept-encoding` (about 111 bytes). The backend's `metadata_bytes_*_received` figures are
+  what actually arrives and what the 8 KB limit is checked against; `summarize.py` uses them when present.
+- **Single host.** When all components run on one machine, they share memory bandwidth and caches even when
+  pinned to separate cores. Running the load generator, gateway and backend on separate hosts avoids this.
 
 ## Result file format
 
