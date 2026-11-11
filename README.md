@@ -1,4 +1,4 @@
-# qsbg-bench — PQC authentication at a REST-to-gRPC gateway
+# grpc-gateway-bench — PQC authentication at a REST-to-gRPC gateway
 
 Experiment code for the paper *PQC Authentication at a REST-to-gRPC Edge Gateway*.
 It measures what post-quantum authentication costs when a gateway translates

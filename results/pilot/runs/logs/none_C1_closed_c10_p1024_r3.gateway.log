@@ -1,0 +1,2 @@
+2026/11/11 08:32:09 gateway C1: REST on https://127.0.0.1:8443/v1/submit (public kex=hybrid) -> gRPC 127.0.0.1:9443 (internal kex=hybrid)
+2026/11/11 08:32:09 admin on http://127.0.0.1:8901/stats

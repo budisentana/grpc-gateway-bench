@@ -1,0 +1,2 @@
+2026/11/11 00:42:14 open results/pilot/open/none_C3_open_r2500_p128_r1.json: too many open files
+2026/11/11 08:45:45 open c=10 rate=2500 payload=128: 21257 ok, 2657.1 RPS, p50=8.48ms p99=463.15ms, errors=map[]

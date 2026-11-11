@@ -1,0 +1,16 @@
+// Data contract used by the benchmark (paper Section IV-B).
+// The Go code encodes/decodes this message by hand (internal/wire) so the
+// suite has no external dependencies; this file documents the schema and can
+// be used with protoc/grpcurl to talk to the backend.
+syntax = "proto3";
+package qsbg.eval;
+
+message EvaluationPayload {
+  int64  transaction_id   = 1;
+  string payload_vector   = 2;
+  int64  ingress_epoch_ms = 3;
+}
+
+service Echo {
+  rpc Submit (EvaluationPayload) returns (EvaluationPayload);
+}
